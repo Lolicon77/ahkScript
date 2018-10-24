@@ -1,6 +1,6 @@
 ﻿#NoEnv ;不检查空变量是否为环境变量（建议所有新脚本使用）。
 ; #NoTrayIcon ;不显示托盘图标。
-#SingleInstance Ignore
+#SingleInstance force
 
 intro := "alt+;启用搜索面板 esc隐藏 enter激活选中项"
 
@@ -29,7 +29,7 @@ Hide(){
 	Show()
 return
 
-#If WinActive("quickFind") or WinActive("test3.ahk")
+#If WinActive("quickFind") or WinActive("QuickFindProcess.ahk")
 $Esc::
 	Hide()
 Return
@@ -49,8 +49,8 @@ Update:
 		WinGet, id, list,,, Program Manager
 		Loop, %id%
 		{
-		    this_id := id%A_Index%
-		    WinGetTitle, t1 ,ahk_id %this_id%
+			this_id := id%A_Index%
+			WinGetTitle, t1 ,ahk_id %this_id%
 			WinGet, t2, ProcessName , ahk_id %this_id%
 			t1 :=  Trim(t1, OmitChars = " `t")
 			StringLen, len, t1
@@ -60,7 +60,7 @@ Update:
 					t1 := SubStr(t1, 1,pos)
 					StringLen, len, t1
 				}
-				if(tempInput == "" or InStr(t1, tempInput) > 0 ){
+				if(tempInput == "" or InStr(t1, tempInput) > 0 or InStr(t2,tempInput)){
 					LV_Add("", t1 ,t2,this_id)
 				}
 			}
@@ -75,8 +75,8 @@ Return
 MyListView:
 if A_GuiEvent = DoubleClick
 {
-    LV_GetText(RowText, A_EventInfo, 3)  ; 从行的第一个字段中获取文本.
-    WinActivate,ahk_id %RowText%
+	LV_GetText(RowText, A_EventInfo, 3)  ; 从行的第一个字段中获取文本.
+	WinActivate,ahk_id %RowText%
 }
 return
 
